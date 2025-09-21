@@ -2,22 +2,11 @@
 import {
     Table,
     TableBody,
-    TableCell,
     TableHead,
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
-
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Ellipsis } from "lucide-vue-next";
 import {
     Pagination,
     PaginationContent,
@@ -28,6 +17,7 @@ import {
 } from '@/components/ui/pagination'
 import DataTableHeader from "./DataTableHeader.vue";
 import { useDataTableStore } from '@/stores/datatable.js';
+import DataTableBodyRow from "./DataTableBodyRow.vue";
 
 defineProps({
     columns: Array
@@ -60,34 +50,7 @@ const dataTableStore = useDataTableStore();
                 </TableRow>
             </TableHeader>
             <TableBody>
-                <TableRow v-for="user in dataTableStore.data" :key="user.id">
-                    <TableCell>
-                        <Checkbox id="terms" />
-                    </TableCell>
-                    <TableCell class="font-medium">
-                        {{ user.id }}
-                    </TableCell>
-                    <TableCell>{{ user.name }}</TableCell>
-                    <TableCell>{{ user.email }}</TableCell>
-                    <TableCell>{{ user.created_at }}</TableCell>
-                    <TableCell class="text-right">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                <button class="p-2 rounded-full hover:bg-muted">
-                                    <Ellipsis class="h-4 w-4" />
-                                </button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>Profile</DropdownMenuItem>
-                                <DropdownMenuItem>Billing</DropdownMenuItem>
-                                <DropdownMenuItem>Team</DropdownMenuItem>
-                                <DropdownMenuItem>Subscription</DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </TableCell>
-                </TableRow>
+                <DataTableBodyRow />
             </TableBody>
         </Table>
         <div class="flex items-center justify-between">
