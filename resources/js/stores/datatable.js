@@ -20,5 +20,22 @@ export const useDataTableStore = defineStore("dataTable", {
         setColumns(columns) {
             this.columns = columns;
         },
+        setTableData(tableData, columns) {
+            // Set columns if provided
+            if (columns) {
+                this.setColumns(columns);
+            }
+            
+            // Handle tableData (like users object from Laravel)
+            if (tableData && tableData.data) {
+                this.setData(tableData.data);
+                this.setLinks(tableData.links || {});
+                this.setMeta(tableData.meta || {});
+            } else {
+                this.setData([]);
+                this.setLinks({});
+                this.setMeta({});
+            }
+        },
     },
 });

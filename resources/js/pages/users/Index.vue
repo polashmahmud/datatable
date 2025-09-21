@@ -31,16 +31,7 @@ const columns = [
 ];
 
 onMounted(() => {
-    dataTableStore.setColumns(columns);
-    if (props.users && props.users.data) {
-        dataTableStore.setData(props.users.data);
-        dataTableStore.setLinks(props.users.links);
-        dataTableStore.setMeta(props.users.meta);
-    } else {
-        dataTableStore.setData([]);
-        dataTableStore.setLinks({});
-        dataTableStore.setMeta({});
-    }
+    dataTableStore.setTableData(props.users, columns);
 });
 </script>
 
