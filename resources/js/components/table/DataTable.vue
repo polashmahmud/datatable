@@ -26,9 +26,11 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from '@/components/ui/pagination'
+import DataTableHeader from "./DataTableHeader.vue";
 
 defineProps({
-    data: Object
+    data: Object,
+    columns: Array
 })
 </script>
 
@@ -48,12 +50,7 @@ defineProps({
                     <TableHead>
                         <Checkbox id="terms" />
                     </TableHead>
-                    <TableHead class="w-[100px]">
-                        ID
-                    </TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Created At</TableHead>
+                    <DataTableHeader :columns="columns" />
                     <TableHead class="text-right">
                         Actions
                     </TableHead>
