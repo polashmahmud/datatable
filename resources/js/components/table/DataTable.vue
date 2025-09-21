@@ -7,17 +7,10 @@ import {
     TableRow,
 } from "@/components/ui/table"
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-    Pagination,
-    PaginationContent,
-    PaginationEllipsis,
-    PaginationItem,
-    PaginationNext,
-    PaginationPrevious,
-} from '@/components/ui/pagination'
 import DataTableHeader from "./DataTableHeader.vue";
 import { useDataTableStore } from '@/stores/datatable.js';
 import DataTableBodyRow from "./DataTableBodyRow.vue";
+import DataTablePagination from "./DataTablePagination.vue";
 
 defineProps({
     columns: Array
@@ -58,22 +51,7 @@ const dataTableStore = useDataTableStore();
             <div class="flex items-center gap-4">
                 <div>Rows per page</div>
                 <div>
-                    <Pagination v-slot="{ page }" :items-per-page="10" :total="30" :default-page="2">
-                        <PaginationContent v-slot="{ items }">
-                            <PaginationPrevious />
-
-                            <template v-for="(item, index) in items" :key="index">
-                                <PaginationItem v-if="item.type === 'page'" :value="item.value"
-                                    :is-active="item.value === page">
-                                    {{ item.value }}
-                                </PaginationItem>
-                            </template>
-
-                            <PaginationEllipsis :index="4" />
-
-                            <PaginationNext />
-                        </PaginationContent>
-                    </Pagination>
+                    <DataTablePagination />
                 </div>
             </div>
         </div>
