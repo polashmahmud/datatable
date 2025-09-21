@@ -27,11 +27,14 @@ import {
     PaginationPrevious,
 } from '@/components/ui/pagination'
 import DataTableHeader from "./DataTableHeader.vue";
+import { useDataTableStore } from '@/stores/datatable.js';
 
 defineProps({
-    data: Object,
     columns: Array
 })
+
+
+const dataTableStore = useDataTableStore();
 </script>
 
 <template>
@@ -57,7 +60,7 @@ defineProps({
                 </TableRow>
             </TableHeader>
             <TableBody>
-                <TableRow v-for="user in data.data" :key="user.id">
+                <TableRow v-for="user in dataTableStore.data" :key="user.id">
                     <TableCell>
                         <Checkbox id="terms" />
                     </TableCell>

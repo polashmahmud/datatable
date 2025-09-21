@@ -19,7 +19,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     },
 ];
 
-defineProps({
+const props = defineProps({
     users: Object
 })
 
@@ -32,6 +32,11 @@ const columns = [
 
 onMounted(() => {
     dataTableStore.setColumns(columns);
+    if (props.users && props.users.data) {
+        dataTableStore.setData(props.users.data);
+    } else {
+        dataTableStore.setData([]);
+    }
 });
 </script>
 
@@ -39,6 +44,6 @@ onMounted(() => {
 
     <Head title="Users" />
     <AppLayout :breadcrumbs="breadcrumbs">
-        <DataTable :data="users" :columns="dataTableStore.columns" />
+        <DataTable :columns="dataTableStore.columns" />
     </AppLayout>
 </template>
