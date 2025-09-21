@@ -50,7 +50,7 @@ defineProps({
                     <TableHead>
                         <Checkbox id="terms" />
                     </TableHead>
-                    <DataTableHeader :columns="columns" />
+                    <DataTableHeader />
                     <TableHead class="text-right">
                         Actions
                     </TableHead>
