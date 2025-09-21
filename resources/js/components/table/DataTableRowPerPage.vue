@@ -7,7 +7,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { usePage, router } from '@inertiajs/vue3'
 import { useDataTableStore } from '@/stores/datatable.js';
 
@@ -18,18 +18,34 @@ const page = usePage();
 
 // Initialize perPage from current meta or URL
 onMounted(() => {
-    const currentPerPage = dataTableStore.meta.per_page || 15;
-    perPage.value = currentPerPage;
+    // Get per_page from URL first, then fallback to store, then default
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlPerPage = urlParams.get('per_page');
+
+    if (urlPerPage) {
+        perPage.value = parseInt(urlPerPage);
+    } else {
+        const currentPerPage = dataTableStore.meta.per_page || 15;
+        perPage.value = currentPerPage;
+    }
+});
+
+// Watch store meta changes to sync perPage value
+watch(() => dataTableStore.meta.per_page, (newPerPage) => {
+    if (newPerPage && newPerPage !== perPage.value) {
+        // Only update if URL doesn't have per_page parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.get('per_page')) {
+            perPage.value = newPerPage;
+        }
+    }
 });
 
 // Handle per page change manually to avoid loops
 const handlePerPageChange = (newVal: any) => {
-    console.log('handlePerPageChange triggered with:', newVal, typeof newVal);
-
     if (!newVal) return;
 
     const perPageValue = newVal.toString();
-    console.log('Per page changed to:', perPageValue);
 
     // Update the ref value immediately to reflect in UI
     perPage.value = parseInt(perPageValue);
@@ -42,8 +58,6 @@ const handlePerPageChange = (newVal: any) => {
     params.set('page', '1'); // Reset to first page
 
     const newUrl = baseUrl + '?' + params.toString();
-
-    console.log('Navigating to:', newUrl);
 
     router.visit(newUrl, {
         preserveState: false,
