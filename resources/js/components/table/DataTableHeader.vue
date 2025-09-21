@@ -2,14 +2,13 @@
 import {
     TableHead,
 } from "@/components/ui/table"
+import { useDataTableStore } from '@/stores/datatable.js';
 
-defineProps({
-    columns: Array
-})
+const dataTableStore = useDataTableStore();
 </script>
 
 <template>
-    <TableHead v-for="column in columns" :key="column.name">
+    <TableHead v-for="column in dataTableStore.columns" :key="column.name">
         {{ column.name }}
     </TableHead>
 </template>
