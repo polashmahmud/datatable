@@ -31,6 +31,9 @@ const handlePerPageChange = (newVal: any) => {
     const perPageValue = newVal.toString();
     console.log('Per page changed to:', perPageValue);
 
+    // Update the ref value immediately to reflect in UI
+    perPage.value = parseInt(perPageValue);
+
     // Use Inertia page URL and modify query parameters
     const baseUrl = page.url.split('?')[0]; // Get base URL without query
     const params = new URLSearchParams(window.location.search);
