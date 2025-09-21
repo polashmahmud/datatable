@@ -2,33 +2,45 @@
 import {
     Select,
     SelectContent,
+    SelectGroup,
     SelectItem,
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
+import { ref, onMounted } from 'vue';
+import { usePage, router } from '@inertiajs/vue3'
 import { useDataTableStore } from '@/stores/datatable.js';
-import { router } from '@inertiajs/vue3';
-import { computed } from 'vue';
 
 const dataTableStore = useDataTableStore();
+const perPage = ref(15);
+const options = [10, 15, 25, 50, 100];
+const page = usePage();
 
-const perPageOptions = [10, 15, 25, 50, 100];
-
-const currentPerPage = computed(() => {
-    return dataTableStore.meta.per_page || 15;
+// Initialize perPage from current meta or URL
+onMounted(() => {
+    const currentPerPage = dataTableStore.meta.per_page || 15;
+    perPage.value = currentPerPage;
 });
 
-const handlePerPageChange = (value: string) => {
-    console.log('Per page changed to:', value); // Debug log
-    const newPerPage = parseInt(value);
+// Handle per page change manually to avoid loops
+const handlePerPageChange = (newVal: any) => {
+    console.log('handlePerPageChange triggered with:', newVal, typeof newVal);
 
-    // Simple approach - just update URL parameters and visit
+    if (!newVal) return;
+
+    const perPageValue = newVal.toString();
+    console.log('Per page changed to:', perPageValue);
+
+    // Use Inertia page URL and modify query parameters
+    const baseUrl = page.url.split('?')[0]; // Get base URL without query
     const params = new URLSearchParams(window.location.search);
-    params.set('per_page', newPerPage.toString());
+
+    params.set('per_page', perPageValue);
     params.set('page', '1'); // Reset to first page
 
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    console.log('Navigating to:', newUrl); // Debug log
+    const newUrl = baseUrl + '?' + params.toString();
+
+    console.log('Navigating to:', newUrl);
 
     router.visit(newUrl, {
         preserveState: false,
@@ -40,14 +52,16 @@ const handlePerPageChange = (value: string) => {
 <template>
     <div class="flex items-center space-x-2">
         <span class="text-sm text-muted-foreground whitespace-nowrap">Rows per page</span>
-        <Select :value="currentPerPage.toString()" @update:value="handlePerPageChange">
-            <SelectTrigger class="w-[70px]">
+        <Select :model-value="perPage.toString()" @update:model-value="handlePerPageChange" class="w-[70px]">
+            <SelectTrigger>
                 <SelectValue />
             </SelectTrigger>
             <SelectContent>
-                <SelectItem v-for="option in perPageOptions" :key="option" :value="option.toString()">
-                    {{ option }}
-                </SelectItem>
+                <SelectGroup>
+                    <SelectItem v-for="option in options" :key="option" :value="option.toString()">
+                        {{ option }}
+                    </SelectItem>
+                </SelectGroup>
             </SelectContent>
         </Select>
     </div>
