@@ -16,13 +16,23 @@ import { useDataTableStore } from '@/stores/datatable.js';
 import { Checkbox } from '@/components/ui/checkbox'
 
 const dataTableStore = useDataTableStore();
+
+// Handle individual row selection
+const handleRowSelect = (itemId: number) => {
+    dataTableStore.toggleSelectItem(itemId);
+};
+
+// Check if a row is selected
+const isRowSelected = (itemId: number) => {
+    return dataTableStore.isSelected(itemId);
+};
 </script>
 
 <template>
     <template v-if="dataTableStore.data.length > 0">
         <TableRow v-for="item in dataTableStore.data" :key="item.id">
-            <TableCell>
-                <Checkbox id="terms" />
+            <TableCell class="w-12">
+                <Checkbox :checked="isRowSelected(item.id)" @update:checked="() => handleRowSelect(item.id)" />
             </TableCell>
             <TableCell class="font-medium">
                 {{ item.id }}

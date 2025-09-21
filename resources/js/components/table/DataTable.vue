@@ -9,6 +9,8 @@ import {
 import { Checkbox } from '@/components/ui/checkbox'
 import DataTableHeader from "./DataTableHeader.vue";
 import { useDataTableStore } from '@/stores/datatable.js';
+import { storeToRefs } from 'pinia';
+import { computed } from 'vue';
 import DataTableBodyRow from "./DataTableBodyRow.vue";
 import DataTablePagination from "./DataTablePagination.vue";
 import DataTableRowPerPage from "./DataTableRowPerPage.vue";
@@ -17,8 +19,21 @@ defineProps({
     columns: Array
 })
 
-
 const dataTableStore = useDataTableStore();
+const { selectedItems } = storeToRefs(dataTableStore);
+
+// Master checkbox computed properties
+const isAllSelected = computed(() => dataTableStore.isAllSelected());
+const isSomeSelected = computed(() => dataTableStore.isSomeSelected());
+
+// Master checkbox handlers
+const handleSelectAll = () => {
+    if (isAllSelected.value) {
+        dataTableStore.deselectAll();
+    } else {
+        dataTableStore.selectAll();
+    }
+};
 </script>
 
 <template>
@@ -34,8 +49,9 @@ const dataTableStore = useDataTableStore();
         <Table>
             <TableHeader>
                 <TableRow>
-                    <TableHead>
-                        <Checkbox id="terms" />
+                    <TableHead class="w-12">
+                        <Checkbox :checked="isAllSelected" :indeterminate="isSomeSelected"
+                            @update:checked="handleSelectAll" />
                     </TableHead>
                     <DataTableHeader />
                     <TableHead class="text-right">
@@ -48,7 +64,9 @@ const dataTableStore = useDataTableStore();
             </TableBody>
         </Table>
         <div class="flex items-center justify-between">
-            <div>No rows selected.</div>
+            <div class="text-sm text-muted-foreground">
+                {{ selectedItems.length > 0 ? `${selectedItems.length} rows selected.` : 'No rows selected.' }}
+            </div>
             <div class="flex items-center gap-4">
                 <div>
                     <DataTableRowPerPage />
