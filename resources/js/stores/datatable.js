@@ -43,23 +43,13 @@ export const useDataTableStore = defineStore("dataTable", {
         },
         // Selection actions
         toggleSelectItem(itemId) {
-            console.log('=== toggleSelectItem START ===');
-            console.log('Input itemId:', itemId, 'Type:', typeof itemId);
-            console.log('Current selectedItems BEFORE:', [...this.selectedItems]);
-            
             const index = this.selectedItems.indexOf(itemId);
-            console.log('Index found:', index);
             
             if (index > -1) {
                 this.selectedItems.splice(index, 1); // Remove if exists
-                console.log('REMOVED item');
             } else {
                 this.selectedItems.push(itemId); // Add if not exists
-                console.log('ADDED item');
             }
-            
-            console.log('Current selectedItems AFTER:', [...this.selectedItems]);
-            console.log('=== toggleSelectItem END ===');
         },
         selectAll() {
             this.selectedItems = this.data.map(item => item.id);

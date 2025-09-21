@@ -13,27 +13,15 @@ import {
 } from "@/components/ui/table"
 import { Ellipsis } from "lucide-vue-next";
 import { useDataTableStore } from '@/stores/datatable.js';
-import { Checkbox } from '@/components/ui/checkbox'
+import DataTableRowCheckbox from './DataTableRowCheckbox.vue';
 
 const dataTableStore = useDataTableStore();
-
-// Handle individual row selection
-const handleRowSelect = (itemId: number) => {
-    dataTableStore.toggleSelectItem(itemId);
-};
-
-// Check if a row is selected
-const isRowSelected = (itemId: number) => {
-    return dataTableStore.isSelected(itemId);
-};
 </script>
 
 <template>
     <template v-if="dataTableStore.data.length > 0">
         <TableRow v-for="item in dataTableStore.data" :key="item.id">
-            <TableCell class="w-12">
-                <Checkbox :checked="isRowSelected(item.id)" @update:checked="() => handleRowSelect(item.id)" />
-            </TableCell>
+            <DataTableRowCheckbox :id="item.id" />
             <TableCell class="font-medium">
                 {{ item.id }}
             </TableCell>
