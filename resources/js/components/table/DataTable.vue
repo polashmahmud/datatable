@@ -11,6 +11,7 @@ import DataTableHeader from "./DataTableHeader.vue";
 import { useDataTableStore } from '@/stores/datatable.js';
 import DataTableBodyRow from "./DataTableBodyRow.vue";
 import DataTablePagination from "./DataTablePagination.vue";
+import DataTableRowPerPage from "./DataTableRowPerPage.vue";
 
 defineProps({
     columns: Array
@@ -49,7 +50,9 @@ const dataTableStore = useDataTableStore();
         <div class="flex items-center justify-between">
             <div>No rows selected.</div>
             <div class="flex items-center gap-4">
-                <div>Rows per page</div>
+                <div>
+                    <DataTableRowPerPage />
+                </div>
                 <div>
                     <DataTablePagination />
                 </div>

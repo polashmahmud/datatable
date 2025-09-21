@@ -15,7 +15,11 @@ const dataTableStore = useDataTableStore();
 
 const goToPage = (url: string | null) => {
     if (url) {
-        router.visit(url);
+        console.log('Navigating to:', url); // Debug log
+        router.visit(url, {
+            preserveState: false,
+            preserveScroll: false
+        });
     }
 };
 

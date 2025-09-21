@@ -31,6 +31,7 @@ const columns = [
 ];
 
 onMounted(() => {
+    console.log('Users data:', props.users); // Debug log
     dataTableStore.setTableData(props.users, columns);
 });
 </script>
