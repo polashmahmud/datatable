@@ -7,38 +7,19 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import { ref, onMounted, watch } from 'vue';
+import { computed } from 'vue';
 import { usePage, router } from '@inertiajs/vue3'
 import { useDataTableStore } from '@/stores/datatable.js';
+import { storeToRefs } from 'pinia';
 
 const dataTableStore = useDataTableStore();
-const perPage = ref(15);
+const { meta } = storeToRefs(dataTableStore);
 const options = [10, 15, 25, 50, 100];
 const page = usePage();
 
-// Initialize perPage from current meta or URL
-onMounted(() => {
-    // Get per_page from URL first, then fallback to store, then default
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlPerPage = urlParams.get('per_page');
-
-    if (urlPerPage) {
-        perPage.value = parseInt(urlPerPage);
-    } else {
-        const currentPerPage = dataTableStore.meta.per_page || 15;
-        perPage.value = currentPerPage;
-    }
-});
-
-// Watch store meta changes to sync perPage value
-watch(() => dataTableStore.meta.per_page, (newPerPage) => {
-    if (newPerPage && newPerPage !== perPage.value) {
-        // Only update if URL doesn't have per_page parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        if (!urlParams.get('per_page')) {
-            perPage.value = newPerPage;
-        }
-    }
+// Reactive computed for current per page value
+const currentPerPage = computed(() => {
+    return meta.value.per_page || 15;
 });
 
 // Handle per page change manually to avoid loops
@@ -46,9 +27,6 @@ const handlePerPageChange = (newVal: any) => {
     if (!newVal) return;
 
     const perPageValue = newVal.toString();
-
-    // Update the ref value immediately to reflect in UI
-    perPage.value = parseInt(perPageValue);
 
     // Use Inertia page URL and modify query parameters
     const baseUrl = page.url.split('?')[0]; // Get base URL without query
@@ -69,7 +47,7 @@ const handlePerPageChange = (newVal: any) => {
 <template>
     <div class="flex items-center space-x-2">
         <span class="text-sm text-muted-foreground whitespace-nowrap">Rows per page</span>
-        <Select :model-value="perPage.toString()" @update:model-value="handlePerPageChange" class="w-[70px]">
+        <Select :model-value="currentPerPage.toString()" @update:model-value="handlePerPageChange" class="w-[70px]">
             <SelectTrigger>
                 <SelectValue />
             </SelectTrigger>
